@@ -8,8 +8,11 @@ export class User {
   @Column()
   fullName: string;
 
-  @Column()
-  emailAddress: string;
+  @Column({ unique: true })
+  email: string;
+
+  @Column({ enum: ['admin', 'user'] })
+  role: string;
 
   @Column()
   password: string;
