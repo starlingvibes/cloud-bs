@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { File } from './File';
+import { History } from './History';
 
 @Entity()
 export class User {
@@ -20,4 +21,7 @@ export class User {
 
   @OneToMany(() => File, (file) => file.user)
   files: File[];
+
+  @OneToMany(() => History, (history) => history.user)
+  history: History[];
 }

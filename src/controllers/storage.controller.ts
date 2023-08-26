@@ -6,6 +6,9 @@ import { Request, Response } from 'express';
 import { AppDataSource } from '../data-source';
 import { File } from '../entity/File';
 import { UserService } from '../services/user.service';
+import { History } from '../entity/History';
+import { HistoryService } from '../services/history.service';
+// import {}
 
 // Instantiate a storage client with credentials
 const storage = new Storage({ keyFilename: 'storage-keys.json' });
@@ -57,7 +60,14 @@ const upload = async (req, res) => {
       newFile.user = user;
 
       const fileRepository = AppDataSource.getRepository(File);
+      const historyService = new HistoryService();
+
       await fileRepository.save(newFile);
+      await historyService.createHistory(
+        user,
+        `${userRootDir}/${req.file.originalname}`,
+        'CREATE'
+      );
 
       try {
         // Make the file public
@@ -94,18 +104,23 @@ const upload = async (req, res) => {
 
 const download = async (req: any, res: any) => {
   try {
+    const userService = new UserService();
+    const user = await userService.findById(req.userData.userId);
     const fileName = req.params.fileName;
     const folderName = req.params.folderName;
     const userRootDir = `${req.userData.fullName
       .replace(/\s/g, '')
       .toLowerCase()}${req.userData.userId}`;
+    const historyService = new HistoryService();
 
     const filePath = folderName
       ? `${userRootDir}/${folderName}/${fileName}`
       : `${userRootDir}/${fileName}`;
 
     const [metaData] = await bucket.file(filePath).getMetadata();
-    console.log(metaData);
+
+    await historyService.createHistory(user, filePath, 'DOWNLOAD');
+
     res.redirect(metaData.mediaLink);
     return {
       status: 'success',
@@ -123,20 +138,29 @@ const download = async (req: any, res: any) => {
 
 const deleteFile = async (req, res) => {
   try {
+    const userService = new UserService();
+    const user = await userService.findById(req.userData.userId);
     const fileRepository = AppDataSource.getRepository(File);
     const { fileName } = req.params;
-    const file = await fileRepository.findOne({
-      where: { fileName: fileName },
-    });
     const userRootDir = `${req.userData.fullName
       .replace(/\s/g, '')
       .toLowerCase()}${req.userData.userId}`;
+    const file = await fileRepository.findOne({
+      where: { fileName: `${userRootDir}/${fileName}` },
+    });
+    console.log(file);
+    // const userRootDir = `${req.userData.fullName
+    //   .replace(/\s/g, '')
+    //   .toLowerCase()}${req.userData.userId}`;
 
     if (!file) {
       throw new Error('File not found!');
     }
 
-    await bucket.file(`${userRootDir}/${fileName}`).delete();
+    const historyService = new HistoryService();
+
+    await bucket.file(`${file.fileName}`).delete();
+    await historyService.createHistory(user, `/${file.fileName}`, 'DELETE');
     await fileRepository.delete(file.id);
 
     return res.status(200).json({
