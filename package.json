@@ -7,7 +7,7 @@
     "build": "rimraf ./build && tsc",
     "start": "ts-node src/server.ts",
     "start:dev": "npx nodemon",
-    "start:prod": "npm run build && node build/src/server.js",
+    "start:prod": "npx ts-node ./src/server.ts",
     "dev": "concurrently \"npx tsc --watch\" \"nodemon -q build/src/server.js\"",
     "test": "jest --coverage",
     "typeorm": "typeorm-ts-node-commonjs",
