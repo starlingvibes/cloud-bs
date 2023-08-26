@@ -8,16 +8,28 @@ const userService = new UserService();
 
 const register = async (req: Request, res: Response) => {
   try {
-    const { fullName, email, role, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 12);
+    const { fullName, email, password } = req.body;
+    if (req.body.adminToken === process.env.ADMIN_TOKEN) {
+      const hashedPassword = await bcrypt.hash(password, 12);
 
-    const newUser = await userService.createUser(
-      fullName,
-      email,
-      role,
-      hashedPassword
-    );
-    res.status(201).json(newUser);
+      const newUser = await userService.createUser(
+        fullName,
+        email,
+        'admin',
+        hashedPassword
+      );
+      res.status(201).json(newUser);
+    } else {
+      const hashedPassword = await bcrypt.hash(password, 12);
+
+      const newUser = await userService.createUser(
+        fullName,
+        email,
+        'user',
+        hashedPassword
+      );
+      res.status(201).json(newUser);
+    }
   } catch (error) {
     console.error(error);
     res.status(500).send('An error occurred.');
@@ -36,7 +48,9 @@ const login = async (req: Request, res: Response) => {
 
     const token = jwt.sign(
       { userId: user.id, role: user.role },
-      process.env.JWT_SECRET,
+      user.role === 'admin'
+        ? process.env.JWT_SECRET_ADMIN
+        : process.env.JWT_SECRET_USER,
       {
         expiresIn: '1h',
       }
