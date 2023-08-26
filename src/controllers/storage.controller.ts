@@ -61,4 +61,15 @@ const upload = async (req, res) => {
   }
 };
 
-module.exports = { upload };
+const download = async (req, res) => {
+  try {
+    const [metaData] = await bucket.file(req.params.name).getMetadata();
+    res.redirect(metaData.mediaLink);
+  } catch (err) {
+    return res.status(401).send({
+      message: 'Could not download the file. ' + err,
+    });
+  }
+};
+
+module.exports = { upload, download };

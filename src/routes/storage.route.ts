@@ -13,5 +13,6 @@ const router = express.Router();
 //   .post(upload.single('file'), uploadController.uploadFile);
 
 router.post('/upload', uploadController.upload);
+router.get('/download/:name', uploadController.download);
 
 export default router;
