@@ -11,6 +11,7 @@ const router = express.Router();
 
 router.post('/upload', verifyBoth, uploadController.upload);
 router.get('/download/:name', verifyBoth, uploadController.download);
+router.post('/create-folder', verifyBoth, uploadController.createFolder);
 
 // Admin-only routes
 router.post(

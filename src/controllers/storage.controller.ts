@@ -97,6 +97,52 @@ const download = async (req: Request, res: Response) => {
   }
 };
 
+const createFolder = async (req, res) => {
+  try {
+    const userService = new UserService();
+    const user = await userService.findById(req.userData.userId);
+
+    if (!user) {
+      return res.status(404).send({
+        message: 'User not found!',
+      });
+    }
+
+    const { folderName } = req.body;
+
+    if (!folderName) {
+      return res.status(400).send({ message: 'Please provide a folder name!' });
+    }
+
+    if (folderName.startsWith('/') || folderName.endsWith('/')) {
+      return res.status(400).send({
+        message: 'Folder name should not start nor end with a forward slash!',
+      });
+    }
+
+    const userRootDir = `${req.userData.fullName
+      .replace(/\s/g, '')
+      .toLowerCase()}${req.userData.userId}`;
+
+    const folderExists = await bucket
+      .file(`${userRootDir}/${folderName}`)
+      .exists();
+    if (folderExists[0]) {
+      return res.status(400).send({ message: 'Folder already exists!' });
+    }
+
+    const folderFile = bucket.file(`${userRootDir}/${folderName}/.keep`);
+    await folderFile.save('');
+
+    return res.status(201).send({ message: 'Folder created successfully!' });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      message: `Could not create the folder - ${error}`,
+    });
+  }
+};
+
 const markUnsafeAndDelete = async (req: Request, res: Response) => {
   const fileId = parseInt(req.params.id, 10);
 
@@ -124,4 +170,4 @@ const markUnsafeAndDelete = async (req: Request, res: Response) => {
   }
 };
 
-module.exports = { upload, download, markUnsafeAndDelete };
+module.exports = { upload, download, markUnsafeAndDelete, createFolder };
