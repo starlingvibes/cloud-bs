@@ -18,4 +18,6 @@ jest.mock('../../controllers/auth.controller', () => ({
 const app = express();
 app.use('/', storageRouter);
 
-describe('Cloud storage routes for the application', () => {});
+describe('Cloud storage routes for the application', () => {
+  test.skip('should call upload function when POST /upload', () => {});
+});

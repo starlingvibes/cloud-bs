@@ -4,7 +4,7 @@ require('dotenv').config();
 const userSecret = process.env.JWT_SECRET_USER;
 const orgSecret = process.env.JWT_SECRET_ADMIN;
 
-exports.verifyUser = (req, res, next) => {
+const verifyUser = (req, res, next) => {
   try {
     const token = req.headers.authorization;
     const decoded = jwt.verify(token, userSecret);
@@ -15,7 +15,7 @@ exports.verifyUser = (req, res, next) => {
   }
 };
 
-exports.verifyAdmin = (req, res, next) => {
+const verifyAdmin = (req, res, next) => {
   try {
     const token = req.headers.authorization;
     const decoded = jwt.verify(token, orgSecret);
@@ -26,7 +26,7 @@ exports.verifyAdmin = (req, res, next) => {
   }
 };
 
-exports.verifyBoth = (req, res, next) => {
+const verifyBoth = (req, res, next) => {
   try {
     const token = req.headers.authorization;
     const decoded = jwt.verify(token, orgSecret);
@@ -43,3 +43,5 @@ exports.verifyBoth = (req, res, next) => {
     }
   }
 };
+
+export { verifyUser, verifyAdmin, verifyBoth };
