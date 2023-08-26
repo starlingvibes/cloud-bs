@@ -2,11 +2,7 @@ import express from 'express';
 import multer from 'multer';
 // import { uploadController } from '../controllers/storage.controller';
 const uploadController = require('../controllers/storage.controller');
-const {
-  verifyUser,
-  verifyAdmin,
-  verifyBoth,
-} = require('../middlewares/auth.middleware');
+const { verifyAdmin, verifyBoth } = require('../middlewares/auth.middleware');
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });

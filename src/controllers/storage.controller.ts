@@ -5,10 +5,22 @@ const { Storage } = require('@google-cloud/storage');
 const storage = new Storage({ keyFilename: 'storage-keys.json' });
 const bucket = storage.bucket('cloud_backupsys');
 const uuid = require('uuid');
+import { AppDataSource } from '../data-source';
+import { File } from '../entity/File';
+import { UserService } from '../services/user.service';
 
 const upload = async (req, res) => {
   try {
     await processUploadedFile(req, res);
+    const newFile = new File();
+    const userService = new UserService();
+    const user = await userService.findById(req.userData.userId);
+
+    if (!user) {
+      return res.status(404).send({
+        message: 'User not found!',
+      });
+    }
 
     if (!req.file) {
       return res.status(400).send({ message: 'Please upload a file!' });
@@ -39,6 +51,12 @@ const upload = async (req, res) => {
       const publicUrl = format(
         `https://storage.googleapis.com/${bucket.name}/${blob.name}`
       );
+      newFile.fileName = req.file.originalname;
+      newFile.path = publicUrl;
+      newFile.user = user;
+
+      const fileRepository = AppDataSource.getRepository(File);
+      await fileRepository.save(newFile);
 
       try {
         // Make the file public
