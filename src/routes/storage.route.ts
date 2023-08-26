@@ -1,6 +1,5 @@
 import express from 'express';
 import multer from 'multer';
-// import { uploadController } from '../controllers/storage.controller';
 const uploadController = require('../controllers/storage.controller');
 const { verifyAdmin, verifyBoth } = require('../middlewares/auth.middleware');
 
@@ -18,6 +17,7 @@ router.get(
 );
 router.post('/create-folder', verifyBoth, uploadController.createFolder);
 router.delete('/delete/:fileName', verifyBoth, uploadController.deleteFile);
+router.get('/list', verifyBoth, uploadController.listFiles);
 
 // Admin-only routes
 router.post(
@@ -25,5 +25,6 @@ router.post(
   verifyAdmin,
   uploadController.markUnsafeAndDelete
 );
+router.get('/fetch-files', verifyAdmin, uploadController.fetchAllFiles);
 
 export default router;

@@ -153,6 +153,70 @@ const deleteFile = async (req, res) => {
     });
   }
 };
+
+const listFiles = async (req, res) => {
+  try {
+    const userRootDir = `${req.userData.fullName
+      .replace(/\s/g, '')
+      .toLowerCase()}${req.userData.userId}`;
+
+    const options = {
+      prefix: userRootDir,
+    };
+
+    // only list files in the user's root directory
+    const [files] = await bucket.getFiles(options);
+    const fileList = files.map((file) => {
+      return {
+        fileName: file.name,
+        fileSize: file.size,
+        fileOwner: file.metadata.owner,
+        fileCreated: file.metadata.timeCreated,
+      };
+    });
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'Files retrieved successfully!',
+      data: fileList,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      status: 'error',
+      message: `Could not retrieve files - ${error}`,
+      data: null,
+    });
+  }
+};
+
+const fetchAllFiles = async (req, res) => {
+  try {
+    const [files] = await bucket.getFiles();
+    const fileList = files.map((file) => {
+      return {
+        fileName: file.name,
+        fileSize: file.size,
+        fileOwner: file.metadata.owner,
+        fileCreated: file.metadata.timeCreated,
+      };
+    });
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'Files retrieved successfully!',
+      data: fileList,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      status: 'error',
+      message: `Could not retrieve files - ${error}`,
+      data: null,
+    });
+  }
+};
+
 const createFolder = async (req, res) => {
   try {
     const userService = new UserService();
@@ -233,4 +297,12 @@ const markUnsafeAndDelete = async (req: Request, res: Response) => {
   }
 };
 
-export { upload, download, markUnsafeAndDelete, createFolder, deleteFile };
+export {
+  upload,
+  download,
+  markUnsafeAndDelete,
+  createFolder,
+  deleteFile,
+  listFiles,
+  fetchAllFiles,
+};
