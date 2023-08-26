@@ -27,6 +27,3 @@ export class UserService {
     return this.userRepository.findOne({ where: { id } });
   }
 }
-
-// module.exports = new UserService();
-// module.exports = UserService;

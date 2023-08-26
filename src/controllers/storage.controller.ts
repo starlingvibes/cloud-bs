@@ -15,10 +15,16 @@ const upload = async (req, res) => {
     }
 
     // Create a new blob in the bucket and upload the file data.
-    let uniquename = `${req.file.fieldname}-${uuid.v4()}-${
-      req.file.originalname
-    }`;
-    const blob = bucket.file(uniquename);
+    // let uniquename = `${req.file.fieldname}-${uuid.v4()}-${
+    //   req.file.originalname
+    // }`;
+
+    // creating a directory for each user
+    const userRootDir = `${req.userData.fullName
+      .replace(/\s/g, '')
+      .toLowerCase()}${req.userData.userId}`;
+
+    const blob = bucket.file(`${userRootDir}/${req.file.originalname}`);
     const blobStream = blob.createWriteStream({
       resumable: false,
     });

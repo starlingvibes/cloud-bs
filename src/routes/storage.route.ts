@@ -13,11 +13,7 @@ const upload = multer({ storage });
 
 const router = express.Router();
 
-// router
-//   .route('/upload')
-//   .post(upload.single('file'), uploadController.uploadFile);
-
-router.post('/upload', verifyUser, uploadController.upload);
+router.post('/upload', verifyBoth, uploadController.upload);
 router.get('/download/:name', verifyBoth, uploadController.download);
 
 export default router;

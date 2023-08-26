@@ -47,7 +47,7 @@ const login = async (req: Request, res: Response) => {
     }
 
     const token = jwt.sign(
-      { userId: user.id, role: user.role },
+      { userId: user.id, role: user.role, fullName: user.fullName },
       user.role === 'admin'
         ? process.env.JWT_SECRET_ADMIN
         : process.env.JWT_SECRET_USER,
