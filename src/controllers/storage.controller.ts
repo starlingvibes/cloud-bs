@@ -32,6 +32,7 @@ const upload = async (req, res) => {
     // }`;
 
     // creating a directory for each user
+    // TODO: create a type to access req.userData et al
     const userRootDir = `${req.userData.fullName
       .replace(/\s/g, '')
       .toLowerCase()}${req.userData.userId}`;
@@ -184,4 +185,5 @@ const markUnsafeAndDelete = async (req: Request, res: Response) => {
   }
 };
 
-module.exports = { upload, download, markUnsafeAndDelete, createFolder };
+// module.exports = { upload, download, markUnsafeAndDelete, createFolder };
+export { upload, download, markUnsafeAndDelete, createFolder };
