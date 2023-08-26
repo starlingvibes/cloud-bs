@@ -9,13 +9,17 @@ const app: Express = express();
 
 app.use(express.json());
 app.use('/api/v1/auth', authRouter);
-// TODO: Implement AUthMiddleware
 app.use('/api/v1/storage', storageRouter);
 
 const port = process.env.PORT;
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('Cloud Backup API built with Node.js, Express, and TypeScript');
+  return res.status(200).json({
+    status: 'success',
+    message:
+      'Cloud Backup API built with Node.js, Express, Google Cloud, PostgreSQL, and TypeScript',
+    data: null,
+  });
 });
 
 app.listen(port, () => {

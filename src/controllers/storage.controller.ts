@@ -1,14 +1,15 @@
 const processUploadedFile = require('../middlewares/processFile.middleware');
 const { format } = require('util');
 const { Storage } = require('@google-cloud/storage');
-// Instantiate a storage client with credentials
-const storage = new Storage({ keyFilename: 'storage-keys.json' });
-const bucket = storage.bucket('cloud_backupsys');
 const uuid = require('uuid');
 import { Request, Response } from 'express';
 import { AppDataSource } from '../data-source';
 import { File } from '../entity/File';
 import { UserService } from '../services/user.service';
+
+// Instantiate a storage client with credentials
+const storage = new Storage({ keyFilename: 'storage-keys.json' });
+const bucket = storage.bucket('cloud_backupsys');
 
 const upload = async (req, res) => {
   try {
@@ -18,13 +19,11 @@ const upload = async (req, res) => {
     const user = await userService.findById(req.userData.userId);
 
     if (!user) {
-      return res.status(404).send({
-        message: 'User not found!',
-      });
+      throw new Error('User not found');
     }
 
     if (!req.file) {
-      return res.status(400).send({ message: 'Please upload a file!' });
+      throw new Error('Please upload a file!');
     }
 
     // Create a new blob in the bucket and upload the file data.
@@ -43,7 +42,7 @@ const upload = async (req, res) => {
     });
 
     blobStream.on('error', (err) => {
-      return res.status(400).send({ message: err.message });
+      throw new Error(err);
     });
 
     // eslint-disable-next-line no-unused-vars
@@ -65,10 +64,12 @@ const upload = async (req, res) => {
       } catch (err) {
         console.log(err);
 
-        // await newImage.save();
-        return res.status(200).send({
+        return res.status(200).json({
+          status: 'success',
           message: `Uploaded the file successfully: ${req.file.originalname}`,
-          url: publicUrl,
+          data: {
+            url: publicUrl,
+          },
         });
       }
     });
@@ -77,11 +78,15 @@ const upload = async (req, res) => {
   } catch (err) {
     if (err.code === 'LIMIT_FILE_SIZE') {
       return res.status(400).json({
+        status: 'error',
         message: 'File cannot be larger than 200MB',
+        data: null,
       });
     }
-    return res.status(500).send({
-      message: `Could not upload the file - ${err}`,
+    return res.status(500).json({
+      status: 'error',
+      message: `Could not upload the file - ${err.message}`,
+      data: null,
     });
   }
 };
@@ -91,8 +96,10 @@ const download = async (req: Request, res: Response) => {
     const [metaData] = await bucket.file(req.params.name).getMetadata();
     res.redirect(metaData.mediaLink);
   } catch (err) {
-    return res.status(401).send({
+    return res.status(401).json({
+      status: 'error',
       message: 'Could not download the file. ' + err,
+      data: null,
     });
   }
 };
@@ -103,21 +110,19 @@ const createFolder = async (req, res) => {
     const user = await userService.findById(req.userData.userId);
 
     if (!user) {
-      return res.status(404).send({
-        message: 'User not found!',
-      });
+      throw new Error("User doesn't exist!");
     }
 
     const { folderName } = req.body;
 
     if (!folderName) {
-      return res.status(400).send({ message: 'Please provide a folder name!' });
+      throw new Error('Please provide a folder name!');
     }
 
     if (folderName.startsWith('/') || folderName.endsWith('/')) {
-      return res.status(400).send({
-        message: 'Folder name should not start nor end with a forward slash!',
-      });
+      throw new Error(
+        'Folder name should not start nor end with a forward slash!'
+      );
     }
 
     const userRootDir = `${req.userData.fullName
@@ -127,18 +132,25 @@ const createFolder = async (req, res) => {
     const folderExists = await bucket
       .file(`${userRootDir}/${folderName}`)
       .exists();
+
     if (folderExists[0]) {
-      return res.status(400).send({ message: 'Folder already exists!' });
+      throw new Error('Folder already exists!');
     }
 
     const folderFile = bucket.file(`${userRootDir}/${folderName}/.keep`);
     await folderFile.save('');
 
-    return res.status(201).send({ message: 'Folder created successfully!' });
+    return res.status(201).json({
+      status: 'success',
+      message: 'Folder created successfully!',
+      data: null,
+    });
   } catch (error) {
     console.log(error);
-    return res.status(500).send({
+    return res.status(500).json({
+      status: 'error',
       message: `Could not create the folder - ${error}`,
+      data: null,
     });
   }
 };
@@ -151,21 +163,23 @@ const markUnsafeAndDelete = async (req: Request, res: Response) => {
     const file = await fileRepository.findOne({ where: { id: fileId } });
 
     if (!file) {
-      return res.status(404).send({
-        message: 'File not found!',
-      });
+      throw new Error('File not found!');
     }
 
     file.isUnsafe = true;
     await bucket.file(file.fileName).delete();
     await fileRepository.save(file);
 
-    return res.status(200).send({
+    return res.status(200).json({
+      status: 'success',
       message: 'File deleted successfully!',
+      data: null,
     });
   } catch (err) {
-    return res.status(500).send({
+    return res.status(500).json({
+      status: 'error',
       message: 'Could not delete the file. ' + err,
+      data: null,
     });
   }
 };

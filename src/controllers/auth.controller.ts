@@ -28,7 +28,7 @@ const register = async (req: Request, res: Response) => {
         'user',
         hashedPassword
       );
-      // res.status(201).json(newUser);
+      // TOD0: Create folder for user on signup
       return res.status(201).json({
         status: 'success',
         message: 'User created successfully',
@@ -39,7 +39,11 @@ const register = async (req: Request, res: Response) => {
     }
   } catch (error) {
     console.error(error);
-    res.status(500).send('An error occurred.');
+    return res.status(500).json({
+      status: 'success',
+      message: 'An error occurred whilst creating user',
+      data: null,
+    });
   }
 };
 
@@ -50,7 +54,7 @@ const login = async (req: Request, res: Response) => {
     const user = await userService.findByEmail(email);
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      throw new Error('Invalid credentials');
     }
 
     const token = jwt.sign(
@@ -63,10 +67,20 @@ const login = async (req: Request, res: Response) => {
       }
     );
 
-    res.json({ token });
+    return res.status(200).json({
+      status: 'success',
+      message: 'User logged in successfully',
+      data: {
+        token,
+      },
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).send('An error occurred.');
+    return res.status(500).json({
+      status: 'error',
+      message: `An error occurred whilst logging in - ${error.message}`,
+      data: null,
+    });
   }
 };
 
