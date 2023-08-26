@@ -5,6 +5,7 @@ const { Storage } = require('@google-cloud/storage');
 const storage = new Storage({ keyFilename: 'storage-keys.json' });
 const bucket = storage.bucket('cloud_backupsys');
 const uuid = require('uuid');
+import { Request, Response } from 'express';
 import { AppDataSource } from '../data-source';
 import { File } from '../entity/File';
 import { UserService } from '../services/user.service';
@@ -51,7 +52,7 @@ const upload = async (req, res) => {
       const publicUrl = format(
         `https://storage.googleapis.com/${bucket.name}/${blob.name}`
       );
-      newFile.fileName = req.file.originalname;
+      newFile.fileName = `${userRootDir}/${req.file.originalname}`;
       newFile.path = publicUrl;
       newFile.user = user;
 
@@ -85,7 +86,7 @@ const upload = async (req, res) => {
   }
 };
 
-const download = async (req, res) => {
+const download = async (req: Request, res: Response) => {
   try {
     const [metaData] = await bucket.file(req.params.name).getMetadata();
     res.redirect(metaData.mediaLink);
@@ -96,4 +97,31 @@ const download = async (req, res) => {
   }
 };
 
-module.exports = { upload, download };
+const markUnsafeAndDelete = async (req: Request, res: Response) => {
+  const fileId = parseInt(req.params.id, 10);
+
+  try {
+    const fileRepository = AppDataSource.getRepository(File);
+    const file = await fileRepository.findOne({ where: { id: fileId } });
+
+    if (!file) {
+      return res.status(404).send({
+        message: 'File not found!',
+      });
+    }
+
+    file.isUnsafe = true;
+    await bucket.file(file.fileName).delete();
+    await fileRepository.save(file);
+
+    return res.status(200).send({
+      message: 'File deleted successfully!',
+    });
+  } catch (err) {
+    return res.status(500).send({
+      message: 'Could not delete the file. ' + err,
+    });
+  }
+};
+
+module.exports = { upload, download, markUnsafeAndDelete };

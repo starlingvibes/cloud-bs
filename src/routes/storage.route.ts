@@ -12,4 +12,11 @@ const router = express.Router();
 router.post('/upload', verifyBoth, uploadController.upload);
 router.get('/download/:name', verifyBoth, uploadController.download);
 
+// Admin-only routes
+router.post(
+  '/mark-unsafe/:id',
+  verifyAdmin,
+  uploadController.markUnsafeAndDelete
+);
+
 export default router;
