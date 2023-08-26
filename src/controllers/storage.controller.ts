@@ -92,10 +92,26 @@ const upload = async (req, res) => {
   }
 };
 
-const download = async (req: Request, res: Response) => {
+const download = async (req: any, res: any) => {
   try {
-    const [metaData] = await bucket.file(req.params.name).getMetadata();
+    const fileName = req.params.fileName;
+    const folderName = req.params.folderName;
+    const userRootDir = `${req.userData.fullName
+      .replace(/\s/g, '')
+      .toLowerCase()}${req.userData.userId}`;
+
+    const filePath = folderName
+      ? `${userRootDir}/${folderName}/${fileName}`
+      : `${userRootDir}/${fileName}`;
+
+    const [metaData] = await bucket.file(filePath).getMetadata();
+    console.log(metaData);
     res.redirect(metaData.mediaLink);
+    return {
+      status: 'success',
+      message: 'File downloaded successfully, navigate to the link below',
+      data: metaData.mediaLink,
+    };
   } catch (err) {
     return res.status(401).json({
       status: 'error',
@@ -105,6 +121,38 @@ const download = async (req: Request, res: Response) => {
   }
 };
 
+const deleteFile = async (req, res) => {
+  try {
+    const fileRepository = AppDataSource.getRepository(File);
+    const { fileName } = req.params;
+    const file = await fileRepository.findOne({
+      where: { fileName: fileName },
+    });
+    const userRootDir = `${req.userData.fullName
+      .replace(/\s/g, '')
+      .toLowerCase()}${req.userData.userId}`;
+
+    if (!file) {
+      throw new Error('File not found!');
+    }
+
+    await bucket.file(`${userRootDir}/${fileName}`).delete();
+    await fileRepository.delete(file.id);
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'File deleted successfully!',
+      data: null,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      status: 'error',
+      message: `Could not delete the file - ${error}`,
+      data: null,
+    });
+  }
+};
 const createFolder = async (req, res) => {
   try {
     const userService = new UserService();
@@ -185,5 +233,4 @@ const markUnsafeAndDelete = async (req: Request, res: Response) => {
   }
 };
 
-// module.exports = { upload, download, markUnsafeAndDelete, createFolder };
-export { upload, download, markUnsafeAndDelete, createFolder };
+export { upload, download, markUnsafeAndDelete, createFolder, deleteFile };
