@@ -25,6 +25,7 @@ The Cloud Backup API is a backend service that powers a cloud backup system. It 
 ### Authentication (users and admins)
 - `POST /api/v1/auth/register`: Register a new user account, admin accounts require a secret token.
 - `POST /api/v1/auth/login`: Log in using email and password for both users and admins.
+- `PUT /api/v1/auth/revoke/:userId`: Allows the Admin to revoke the session of a user
 
 ### User   functionalities
 - `POST /api/v1/storage/upload`: Upload a file to the backup service
@@ -41,6 +42,7 @@ The Cloud Backup API is a backend service that powers a cloud backup system. It 
 - `GET /api/v1/storage/fetch-files`: Get all files stored on the bucket
 - `GET /api/v1/storage/`: Get the history of all files uploaded to the bucket
 - `GET /api/v1/history/:userId`: Get the file upload history of a given user
+- `POST /api/v1/storage/mark-unsafe/:id`: Mark a file as unsafe
  
 ## Database Setup:
 
