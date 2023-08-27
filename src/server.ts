@@ -1,6 +1,7 @@
 import express, { Express, Request, Response } from 'express';
 import authRouter from './routes/auth.route';
 import storageRouter from './routes/storage.route';
+import historyRouter from './routes/history.route';
 const dotenv = require('dotenv');
 const cors = require('cors');
 
@@ -13,6 +14,7 @@ app.use(cors());
 
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/storage', storageRouter);
+app.use('/api/v1/history', historyRouter);
 
 const port = process.env.PORT;
 

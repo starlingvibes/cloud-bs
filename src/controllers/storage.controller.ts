@@ -160,7 +160,7 @@ const deleteFile = async (req, res) => {
     const historyService = new HistoryService();
 
     await bucket.file(`${file.fileName}`).delete();
-    await historyService.createHistory(user, `/${file.fileName}`, 'DELETE');
+    await historyService.createHistory(user, `${file.fileName}`, 'DELETE');
     await fileRepository.delete(file.id);
 
     return res.status(200).json({

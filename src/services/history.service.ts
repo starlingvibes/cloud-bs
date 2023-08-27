@@ -17,4 +17,12 @@ export class HistoryService {
     });
     return this.historyRepository.save(newHistory);
   }
+
+  async fetchHistory(): Promise<History[]> {
+    const allHistory = this.historyRepository.find({
+      order: { timestamp: 'DESC' },
+    });
+
+    return allHistory;
+  }
 }
