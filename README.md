@@ -116,6 +116,15 @@ To run tests:
 yarn test
 ```
 
+## Dockerization 
+
+The API is containerized using Docker. A Dockerfile is provided in the repository. To build and run the Docker container:
+
+```bash
+docker build -t cloud-bs .
+docker run -p 13000:8000 -d cloud-bs
+```
+
 ## Postman Collection
 
 You can find a Postman collection with example API requests in the `src/postman` directory. Import this collection into Postman to test the API endpoints.
