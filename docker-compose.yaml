@@ -1,4 +1,4 @@
-version: '3'
+version: '3.9'
 services:
   db:
     image: postgres
@@ -12,4 +12,9 @@ services:
       - '13000:8000'
     depends_on:
       - db
+      - redis
     command: sh -c "sleep 10 && npm run start"
+  redis:
+    image: redis:6.2.5-alpine
+    environment:
+      REDIS_URL: ${REDIS_URL}
