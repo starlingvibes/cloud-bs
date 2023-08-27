@@ -22,6 +22,9 @@ export class File {
   @JoinColumn({ name: 'user_id' })
   user: User;
 
+  @Column({ nullable: true })
+  admin_id: number;
+
   @Column({ default: false })
   isUnsafe: boolean;
 }

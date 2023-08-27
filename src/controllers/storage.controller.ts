@@ -292,7 +292,7 @@ const createFolder = async (req, res) => {
   }
 };
 
-const markUnsafeAndDelete = async (req: Request, res: Response) => {
+const markUnsafeAndDelete = async (req: any, res: Response) => {
   const fileId = parseInt(req.params.id, 10);
 
   try {
@@ -304,14 +304,27 @@ const markUnsafeAndDelete = async (req: Request, res: Response) => {
     }
 
     file.isUnsafe = true;
-    await bucket.file(file.fileName).delete();
-    await fileRepository.save(file);
 
-    return res.status(200).json({
-      status: 'success',
-      message: 'File deleted successfully!',
-      data: null,
-    });
+    // Multiple admin review for file to get deleted - 2 admins required
+    if (file.isUnsafe && file.admin_id !== req.userData.userId) {
+      await bucket.file(file.fileName).delete();
+      await fileRepository.delete(file.id);
+
+      return res.status(200).json({
+        status: 'success',
+        message: 'File marked as unsafe and deleted successfully!',
+        data: null,
+      });
+    } else {
+      file.admin_id = req.userData.userId;
+      await fileRepository.save(file);
+
+      return res.status(200).json({
+        status: 'success',
+        message: 'File successfully marked as unsafe',
+        data: null,
+      });
+    }
   } catch (err) {
     return res.status(500).json({
       status: 'error',
