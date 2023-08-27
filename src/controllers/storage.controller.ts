@@ -8,12 +8,12 @@ import { File } from '../entity/File';
 import { UserService } from '../services/user.service';
 import { History } from '../entity/History';
 import { HistoryService } from '../services/history.service';
-// import {}
 
 // Instantiate a storage client with credentials
 const storage = new Storage({ keyFilename: 'storage-keys.json' });
 const bucket = storage.bucket('cloud_backupsys');
 
+// TODO: @lowpriority - refactor this to use a storage service
 const upload = async (req, res) => {
   try {
     await processUploadedFile(req, res);

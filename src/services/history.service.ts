@@ -25,4 +25,13 @@ export class HistoryService {
 
     return allHistory;
   }
+
+  async fetchHistoryForUser(userId: number): Promise<History[]> {
+    const allHistoryForUser = this.historyRepository.find({
+      where: { user: { id: userId } },
+      order: { timestamp: 'DESC' },
+    });
+
+    return allHistoryForUser;
+  }
 }
