@@ -7,6 +7,7 @@ const dotenv = require('dotenv');
 
 const router = express.Router();
 const userService = new UserService();
+dotenv.config();
 
 const register = async (req: Request, res: Response) => {
   try {
