@@ -12,11 +12,7 @@ const verifyUser = async (req, res, next) => {
 
     const connectRedisAndCheckToken = async () => {
       const client = createClient({
-        password: process.env.REDIS_PASSWORD,
-        socket: {
-          host: process.env.REDIS_HOST,
-          port: parseInt(process.env.REDIS_PORT),
-        },
+        url: process.env.REDIS_URL,
       });
 
       await client.connect();
@@ -66,11 +62,7 @@ const verifyBoth = async (req, res, next) => {
       const decoded = jwt.verify(token, userSecret);
       const connectRedisAndCheckToken = async () => {
         const client = createClient({
-          password: process.env.REDIS_PASSWORD,
-          socket: {
-            host: process.env.REDIS_HOST,
-            port: parseInt(process.env.REDIS_PORT),
-          },
+          url: process.env.REDIS_URL,
         });
 
         await client.connect();

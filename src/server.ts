@@ -2,7 +2,6 @@ import express, { Express, Request, Response } from 'express';
 import authRouter from './routes/auth.route';
 import storageRouter from './routes/storage.route';
 import historyRouter from './routes/history.route';
-// import { createClient } from 'redis';
 const dotenv = require('dotenv');
 const cors = require('cors');
 

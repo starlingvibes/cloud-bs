@@ -95,6 +95,7 @@ DB_NAME=cloud_backup
 REDIS_HOST=
 REDIS_PASSWORD=
 REDIS_PORT=
+REDIS_URL=
 
 # application secrets
 JWT_SECRET_USER=

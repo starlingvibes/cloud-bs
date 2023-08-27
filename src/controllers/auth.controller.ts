@@ -72,11 +72,7 @@ const login = async (req: Request, res: Response) => {
     // TODO: Refactor this into a separate function
     const connectRedisAndCreateEntry = async () => {
       const client = createClient({
-        password: process.env.REDIS_PASSWORD,
-        socket: {
-          host: process.env.REDIS_HOST,
-          port: parseInt(process.env.REDIS_PORT),
-        },
+        url: process.env.REDIS_URL,
       });
 
       await client.connect();
@@ -116,11 +112,7 @@ const revokeUserSession = async (req: Request, res: Response) => {
   try {
     const connectRedisAndRevokeToken = async () => {
       const client = createClient({
-        password: process.env.REDIS_PASSWORD,
-        socket: {
-          host: process.env.REDIS_HOST,
-          port: parseInt(process.env.REDIS_PORT),
-        },
+        url: process.env.REDIS_URL,
       });
 
       await client.connect();
