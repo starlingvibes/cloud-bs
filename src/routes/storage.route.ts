@@ -18,6 +18,7 @@ router.get(
 router.post('/create-folder', verifyBoth, uploadController.createFolder);
 router.delete('/delete/:fileName', verifyBoth, uploadController.deleteFile);
 router.get('/list', verifyBoth, uploadController.listFiles);
+router.post('/compress', verifyBoth, uploadController.compressFile);
 
 // Admin-only routes
 router.post(

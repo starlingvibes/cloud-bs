@@ -14,6 +14,48 @@
 					"item": [
 						{
 							"name": "Login user account",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});",
+											"",
+											"",
+											"pm.test(\"Status is not empty\", function () {",
+											"    const responseData = pm.response.json();",
+											"",
+											"    pm.expect(responseData).to.be.an('object');",
+											"    pm.expect(responseData.status).to.exist.and.to.not.be.empty;",
+											"});",
+											"",
+											"",
+											"pm.test(\"Message is not empty\", function () {",
+											"  const responseData = pm.response.json();",
+											"  ",
+											"  pm.expect(responseData.message).to.exist.and.to.not.be.empty;",
+											"});",
+											"",
+											"",
+											"pm.test(\"The data object is present in the response\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData.data).to.exist;",
+											"});",
+											"",
+											"",
+											"pm.test(\"Token is not empty\", function () {",
+											"  const responseData = pm.response.json();",
+											"  ",
+											"  pm.expect(responseData.data.token).to.exist.and.to.not.be.empty;",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [],
@@ -107,6 +149,50 @@
 						},
 						{
 							"name": "Login admin account",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"",
+											"pm.test(\"Response has required fields\", function () {",
+											"  const responseData = pm.response.json();",
+											"",
+											"  pm.expect(responseData).to.be.an('object');",
+											"  pm.expect(responseData.status).to.exist;",
+											"  pm.expect(responseData.message).to.exist;",
+											"  pm.expect(responseData.data).to.exist;",
+											"});",
+											"",
+											"",
+											"pm.test(\"Token is a non-empty string\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData).to.be.an('object');",
+											"    pm.expect(responseData.data.token).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Token should not be empty\");",
+											"});",
+											"",
+											"",
+											"pm.test(\"Token format is correct\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData).to.be.an('object');",
+											"    pm.expect(responseData.data.token).to.exist.and.to.match(/^[A-Za-z0-9-_]+\\.[A-Za-z0-9-_]+\\.[A-Za-z0-9-_]+$/);",
+											"});",
+											"",
+											"",
+											"pm.test(\"Response time is less than 500ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(500);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [],
@@ -138,6 +224,50 @@
 						},
 						{
 							"name": "Revoke user session",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"",
+											"pm.test(\"Validate response body structure\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData).to.be.an('object');",
+											"    pm.expect(responseData.status).to.exist.and.to.be.a('string');",
+											"    pm.expect(responseData.message).to.exist.and.to.be.a('string');",
+											"    pm.expect(responseData.data).to.exist.and.to.be.null;",
+											"});",
+											"",
+											"",
+											"pm.test(\"Status is a non-empty string\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData.status).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+											"});",
+											"",
+											"",
+											"pm.test(\"Message is a non-empty string\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData.message).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+											"});",
+											"",
+											"",
+											"pm.test(\"Data is null\", function () {",
+											"  const responseData = pm.response.json();",
+											"  ",
+											"  pm.expect(responseData.data).to.be.null;",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "PUT",
 								"header": [
@@ -396,6 +526,53 @@
 						},
 						{
 							"name": "Create folder to hold files",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 201\", function () {",
+											"  pm.expect(pm.response.code).to.equal(201);",
+											"});",
+											"",
+											"",
+											"pm.test(\"Response has required fields\", function () {",
+											"  const responseData = pm.response.json();",
+											"  ",
+											"  pm.expect(responseData).to.be.an('object');",
+											"  pm.expect(responseData.status).to.exist;",
+											"  pm.expect(responseData.message).to.exist;",
+											"  pm.expect(responseData.data).to.exist;",
+											"});",
+											"",
+											"",
+											"pm.test(\"Status is a non-empty string\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData).to.be.an('object');",
+											"    pm.expect(responseData.status).to.exist.and.to.be.a('string');",
+											"    pm.expect(responseData.status).to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+											"});",
+											"",
+											"",
+											"pm.test(\"Message is a non-empty string\", function () {",
+											"  const responseData = pm.response.json();",
+											"  ",
+											"  pm.expect(responseData).to.be.an('object');",
+											"  pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+											"});",
+											"",
+											"",
+											"pm.test(\"Data is null\", function () {",
+											"  const responseData = pm.response.json();",
+											"  ",
+											"  pm.expect(responseData.data).to.be.null;",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [
@@ -430,6 +607,44 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Compress files",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsInJvbGUiOiJ1c2VyIiwiZnVsbE5hbWUiOiJDaGlkZXJhIEFuaWNoZWJlIiwiaWF0IjoxNjkzMTc2NTgzLCJleHAiOjE2OTMxODAxODN9.wbtYUp3n8u6UlbbZPSnbmWOC8QYYXU8rtgGgWlzvuZs",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/C:/Users/hp/Pictures/TB/IMG_9929.JPG"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:8000/api/v1/storage/compress",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"v1",
+										"storage",
+										"compress"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -438,6 +653,54 @@
 					"item": [
 						{
 							"name": "Fetch file history",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"",
+											"pm.test(\"The id is a non-negative integer\", function () {",
+											"  const responseData = pm.response.json();",
+											"  ",
+											"  pm.expect(responseData).to.be.an('object');",
+											"  pm.expect(responseData.data).to.be.an('array');",
+											"",
+											"  responseData.data.forEach(function(item) {",
+											"    pm.expect(item.id).to.exist.and.to.be.a('number').and.to.be.at.least(0);",
+											"  });",
+											"});",
+											"",
+											"",
+											"pm.test(\"fileName is a non-empty string\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData.data).to.be.an('array').and.to.have.lengthOf.at.least(1, \"Data array should not be empty\");",
+											"    ",
+											"    responseData.data.forEach(function (item) {",
+											"        pm.expect(item.fileName).to.be.a('string').and.to.have.lengthOf.at.least(1, \"fileName should be a non-empty string\");",
+											"    });",
+											"});",
+											"",
+											"",
+											"pm.test(\"Action is a non-empty string\", function () {",
+											"  const responseData = pm.response.json();",
+											"",
+											"  pm.expect(responseData).to.be.an(\"object\");",
+											"  pm.expect(responseData.data).to.be.an(\"array\").and.to.have.lengthOf.at.least(1);",
+											"  ",
+											"  responseData.data.forEach(function(item){",
+											"    pm.expect(item.action).to.be.a(\"string\").and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+											"  });",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "GET",
 								"header": [
@@ -465,6 +728,53 @@
 						},
 						{
 							"name": "Fetch history for a given user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"",
+											"pm.test(\"fileName is a non-empty string\", function () {",
+											"  const responseData = pm.response.json();",
+											"  ",
+											"  pm.expect(responseData).to.be.an('object');",
+											"  pm.expect(responseData.data).to.be.an('array');",
+											"  ",
+											"  responseData.data.forEach(function(item) {",
+											"    pm.expect(item.fileName).to.be.a('string').and.to.have.lengthOf.at.least(1, \"fileName should not be empty\");",
+											"  });",
+											"});",
+											"",
+											"",
+											"pm.test(\"Action is a non-empty string\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData).to.be.an('object');",
+											"    ",
+											"    responseData.data.forEach(function (item) {",
+											"        pm.expect(item.action).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+											"    });",
+											"});",
+											"",
+											"",
+											"pm.test(\"Timestamp is in a valid date format\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData).to.be.an('object');",
+											"    ",
+											"    responseData.data.forEach(function (item) {",
+											"        pm.expect(item.timestamp).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$/, \"Timestamp should be in valid date format\");",
+											"    });",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "GET",
 								"header": [
@@ -535,6 +845,40 @@
 						},
 						{
 							"name": "Register admin user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 201\", function () {",
+											"  pm.expect(pm.response.code).to.equal(201);",
+											"});",
+											"",
+											"",
+											"pm.test(\"Email is in a valid format\", function () {",
+											"  const responseData = pm.response.json();",
+											"  ",
+											"  pm.expect(responseData.data.user.email).to.match(/^[\\w-]+(\\.[\\w-]+)*@([\\w-]+\\.)+[a-zA-Z]{2,7}$/);",
+											"});",
+											"",
+											"",
+											"pm.test(\"fullName is a non-empty string\", function () {",
+											"  const responseData = pm.response.json();",
+											"  ",
+											"  pm.expect(responseData.data.user.fullName).to.be.a('string').and.to.have.lengthOf.at.least(1, \"fullName should not be empty\");",
+											"});",
+											"",
+											"",
+											"pm.test(\"Password is a non-empty string\", function () {",
+											"    const responseData = pm.response.json();",
+											"",
+											"    pm.expect(responseData.data.user.password).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [],
@@ -599,6 +943,48 @@
 						},
 						{
 							"name": "Login admin account",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});",
+											"",
+											"",
+											"pm.test(\"Response has the required fields\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData).to.be.an('object');",
+											"    pm.expect(responseData.status).to.exist;",
+											"    pm.expect(responseData.message).to.exist;",
+											"    pm.expect(responseData.data).to.exist;",
+											"});",
+											"",
+											"",
+											"pm.test(\"Token is a non-empty string\", function () {",
+											"  const responseData = pm.response.json();",
+											"  ",
+											"  pm.expect(responseData.data.token).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Token should not be empty\");",
+											"});",
+											"",
+											"",
+											"pm.test(\"Response time is less than 500ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(500);",
+											"});",
+											"",
+											"",
+											"pm.test(\"The status field must be one of the expected values\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData.status).to.exist.and.to.be.oneOf([\"expectedValue1\", \"expectedValue2\", \"expectedValue3\"]);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [],
@@ -904,6 +1290,45 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Compress files",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsInJvbGUiOiJ1c2VyIiwiZnVsbE5hbWUiOiJDaGlkZXJhIEFuaWNoZWJlIiwiaWF0IjoxNjkzMTc2NTgzLCJleHAiOjE2OTMxODAxODN9.wbtYUp3n8u6UlbbZPSnbmWOC8QYYXU8rtgGgWlzvuZs",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/C:/Users/hp/Pictures/TB/IMG_9929.JPG"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://cloud-backup.onrender.com/api/v1/storage/compress",
+									"protocol": "https",
+									"host": [
+										"cloud-backup",
+										"onrender",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"storage",
+										"compress"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -912,6 +1337,50 @@
 					"item": [
 						{
 							"name": "Fetch file history",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {",
+											"  pm.expect(pm.response.code).to.equal(200);",
+											"});",
+											"",
+											"",
+											"pm.test(\"Response has the required fields - status, message, and data\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData).to.be.an('object');",
+											"    pm.expect(responseData.status).to.exist;",
+											"    pm.expect(responseData.message).to.exist;",
+											"    pm.expect(responseData.data).to.exist;",
+											"});",
+											"",
+											"",
+											"pm.test(\"Status is a non-empty string\", function () {",
+											"    const responseData = pm.response.json();",
+											"",
+											"    pm.expect(responseData.status).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+											"});",
+											"",
+											"",
+											"pm.test(\"Message is a non-empty string\", function () {",
+											"  const responseData = pm.response.json();",
+											"  ",
+											"  pm.expect(responseData.message).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+											"});",
+											"",
+											"",
+											"pm.test(\"Data is an array\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData.data).to.be.an('array');",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "GET",
 								"header": [
@@ -940,6 +1409,48 @@
 						},
 						{
 							"name": "Fetch history for a given user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"",
+											"pm.test(\"Validate the 'status' field is a non-empty string\", function () {",
+											"    const responseData = pm.response.json();",
+											"",
+											"    pm.expect(responseData.status).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+											"});",
+											"",
+											"",
+											"pm.test(\"Validate the 'message' field is a non-empty string\", function () {",
+											"    const responseData = pm.response.json();",
+											"  ",
+											"    pm.expect(responseData).to.be.an('object');",
+											"    pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+											"});",
+											"",
+											"",
+											"pm.test(\"Verify that the 'data' array is present in the response\", function () {",
+											"  const responseData = pm.response.json();",
+											"  ",
+											"  pm.expect(responseData.data).to.exist.and.to.be.an('array');",
+											"});",
+											"",
+											"",
+											"pm.test(\"The 'data' array should be empty\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData.data).to.be.an('array').that.is.empty;",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "GET",
 								"header": [

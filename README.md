@@ -36,6 +36,7 @@ The Cloud Backup API is a backend service that powers a cloud backup system. It 
 - `GET /api/v1/storage/list`: Get all files created by the user 
 - `DELETE /api/v1/storage/delete/:fileName`: Delete file created by the user 
 - `GET /api/v1/history/:userId`: Get the file upload history of the user
+- `POST /api/v1/storage/compress`: Compress files and store them on the server
 
 ### Admin   functionalities
 - `DELETE /api/v1/storage/delete/:fileName`: Delete a file from the storage bucket

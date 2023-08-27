@@ -8,6 +8,9 @@ import { File } from '../entity/File';
 import { UserService } from '../services/user.service';
 import { History } from '../entity/History';
 import { HistoryService } from '../services/history.service';
+const zlib = require('zlib');
+const fs = require('fs');
+const path = require('path');
 
 // Instantiate a storage client with credentials
 const storage = new Storage({ keyFilename: 'storage-keys.json' });
@@ -334,6 +337,33 @@ const markUnsafeAndDelete = async (req: any, res: Response) => {
   }
 };
 
+const compressFile = async (req: any, res) => {
+  try {
+    await processUploadedFile(req, res);
+    const destination = `../compressed/${req.file.originalname}.gz`;
+    let fileBuffer = req.file.buffer;
+    await zlib.gzip(fileBuffer, (err, response) => {
+      if (err) {
+        console.log(err);
+      }
+      fs.writeFile(path.join(__dirname, destination), response, (err, data) => {
+        if (err) {
+          console.log(err);
+        }
+        res.download(path.join(__dirname, destination));
+      });
+    });
+  } catch (err) {
+    console.log(err);
+    res.json(err);
+    return res.status(500).json({
+      status: 'error',
+      message: `Could not compress the file - ${err}`,
+      data: null,
+    });
+  }
+};
+
 export {
   upload,
   download,
@@ -342,4 +372,5 @@ export {
   deleteFile,
   listFiles,
   fetchAllFiles,
+  compressFile,
 };
