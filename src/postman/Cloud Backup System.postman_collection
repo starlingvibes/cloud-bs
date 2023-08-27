@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "3ec28ac2-056a-459e-8ab3-0c0c227799d1",
-		"name": "Cloud Backup System",
+		"name": "Risevest - Cloud Backup System",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "25701563"
 	},
@@ -135,6 +135,35 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Revoke user session",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksInJvbGUiOiJhZG1pbiIsImZ1bGxOYW1lIjoiU3VwZXIgYWRtaW4gMiIsImlhdCI6MTY5MzE3MTYxOCwiZXhwIjoxNjkzMTc1MjE4fQ.__TchYy1vBF69sk7Ye9-lbp8VWBRYC2NMeyo7ExRQjE",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8000/api/v1/auth/revoke/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"revoke",
+										"2"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -149,16 +178,17 @@
 									{
 										"key": "Authorization",
 										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsInJvbGUiOiJ1c2VyIiwiZnVsbE5hbWUiOiJDaGlkZXJhIEFuaWNoZWJlIiwiaWF0IjoxNjkzMDg0NDI1LCJleHAiOjE2OTMwODgwMjV9.u5v1oGS3KTziAxBPJGD3hA6jMj_A-gE3ZlQPRYgOeXY",
-										"type": "text"
+										"type": "text",
+										"disabled": true
 									},
 									{
 										"key": "Authorization",
-										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsInJvbGUiOiJ1c2VyIiwiZnVsbE5hbWUiOiJDaGlkZXJhIEFuaWNoZWJlIiwiaWF0IjoxNjkzMDg0NDI1LCJleHAiOjE2OTMwODgwMjV9.u5v1oGS3KTziAxBPJGD3hA6jMj_A-gE3ZlQPRYgOeXY",
+										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksInJvbGUiOiJhZG1pbiIsImZ1bGxOYW1lIjoiU3VwZXIgYWRtaW4gMiIsImlhdCI6MTY5MzE3MTYxOCwiZXhwIjoxNjkzMTc1MjE4fQ.__TchYy1vBF69sk7Ye9-lbp8VWBRYC2NMeyo7ExRQjE",
 										"type": "text"
 									}
 								],
 								"url": {
-									"raw": "http://localhost:8000/api/v1/storage/download/if.png",
+									"raw": "http://localhost:8000/api/v1/storage/download/stecon2022.png",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -169,7 +199,7 @@
 										"v1",
 										"storage",
 										"download",
-										"if.png"
+										"stecon2022.png"
 									]
 								}
 							},
@@ -363,6 +393,43 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Create folder to hold files",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksInJvbGUiOiJhZG1pbiIsImZ1bGxOYW1lIjoiU3VwZXIgYWRtaW4gMiIsImlhdCI6MTY5MzE3MTYxOCwiZXhwIjoxNjkzMTc1MjE4fQ.__TchYy1vBF69sk7Ye9-lbp8VWBRYC2NMeyo7ExRQjE",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"folderName\": \"archives\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8000/api/v1/storage/create-folder",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"v1",
+										"storage",
+										"create-folder"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -376,7 +443,7 @@
 								"header": [
 									{
 										"key": "Authorization",
-										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsInJvbGUiOiJhZG1pbiIsImZ1bGxOYW1lIjoiU3VwZXIgYWRtaW4iLCJpYXQiOjE2OTMxMTgxMjgsImV4cCI6MTY5MzEyMTcyOH0.hOK4NSXTEwDqOmnATuNBGC8NrPigSwPJzLr1ri9mlDo",
+										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksInJvbGUiOiJhZG1pbiIsImZ1bGxOYW1lIjoiU3VwZXIgYWRtaW4gMiIsImlhdCI6MTY5MzE3MTYxOCwiZXhwIjoxNjkzMTc1MjE4fQ.__TchYy1vBF69sk7Ye9-lbp8VWBRYC2NMeyo7ExRQjE",
 										"type": "text"
 									}
 								],
@@ -403,7 +470,7 @@
 								"header": [
 									{
 										"key": "Authorization",
-										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsInJvbGUiOiJhZG1pbiIsImZ1bGxOYW1lIjoiU3VwZXIgYWRtaW4iLCJpYXQiOjE2OTMxMTgxMjgsImV4cCI6MTY5MzEyMTcyOH0.hOK4NSXTEwDqOmnATuNBGC8NrPigSwPJzLr1ri9mlDo",
+										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksInJvbGUiOiJhZG1pbiIsImZ1bGxOYW1lIjoiU3VwZXIgYWRtaW4gMiIsImlhdCI6MTY5MzE3MTYxOCwiZXhwIjoxNjkzMTc1MjE4fQ.__TchYy1vBF69sk7Ye9-lbp8VWBRYC2NMeyo7ExRQjE",
 										"type": "text"
 									}
 								],
@@ -561,6 +628,36 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Revoke user session",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksInJvbGUiOiJhZG1pbiIsImZ1bGxOYW1lIjoiU3VwZXIgYWRtaW4gMiIsImlhdCI6MTY5MzE3MTYxOCwiZXhwIjoxNjkzMTc1MjE4fQ.__TchYy1vBF69sk7Ye9-lbp8VWBRYC2NMeyo7ExRQjE",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://cloud-backup.onrender.com/api/v1/auth/revoke/2",
+									"protocol": "https",
+									"host": [
+										"cloud-backup",
+										"onrender",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"revoke",
+										"2"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -609,6 +706,262 @@
 										"v1",
 										"storage",
 										"upload"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Download file in subfolder",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsInJvbGUiOiJ1c2VyIiwiZnVsbE5hbWUiOiJDaGlkZXJhIEFuaWNoZWJlIiwiaWF0IjoxNjkzMDgwMjM2LCJleHAiOjE2OTMwODM4MzZ9.n01vBr13HuypAI_Kkk-BTeOyEBVLprY4DdnJ8lWFymI",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "https://cloud-backup.onrender.com/api/v1/storage/download/myFiles/.keep",
+									"protocol": "https",
+									"host": [
+										"cloud-backup",
+										"onrender",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"storage",
+										"download",
+										"myFiles",
+										".keep"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete file from storage and database",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsInJvbGUiOiJhZG1pbiIsImZ1bGxOYW1lIjoiU3VwZXIgYWRtaW4iLCJpYXQiOjE2OTMxMTgxMjgsImV4cCI6MTY5MzEyMTcyOH0.hOK4NSXTEwDqOmnATuNBGC8NrPigSwPJzLr1ri9mlDo",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://cloud-backup.onrender.com/api/v1/storage/delete/stecon2022.png",
+									"protocol": "https",
+									"host": [
+										"cloud-backup",
+										"onrender",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"storage",
+										"delete",
+										"stecon2022.png"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List files owned by user",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsInJvbGUiOiJ1c2VyIiwiZnVsbE5hbWUiOiJDaGlkZXJhIEFuaWNoZWJlIiwiaWF0IjoxNjkzMDgwMjM2LCJleHAiOjE2OTMwODM4MzZ9.n01vBr13HuypAI_Kkk-BTeOyEBVLprY4DdnJ8lWFymI",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://cloud-backup.onrender.com/api/v1/storage/list",
+									"protocol": "https",
+									"host": [
+										"cloud-backup",
+										"onrender",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"storage",
+										"list"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Fetch all files in the bucket",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsInJvbGUiOiJhZG1pbiIsImZ1bGxOYW1lIjoiU3VwZXIgYWRtaW4iLCJpYXQiOjE2OTMwODI3ODIsImV4cCI6MTY5MzA4NjM4Mn0.X9hmW2GeVysrpdX8EWhDZBcFsdWm4A50vvk9xhnL5cs",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://cloud-backup.onrender.com/api/v1/storage/fetch-files",
+									"protocol": "https",
+									"host": [
+										"cloud-backup",
+										"onrender",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"storage",
+										"fetch-files"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mark file as unsafe",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksInJvbGUiOiJhZG1pbiIsImZ1bGxOYW1lIjoiU3VwZXIgYWRtaW4gMiIsImlhdCI6MTY5MzEyMDM2NywiZXhwIjoxNjkzMTIzOTY3fQ.Jswm3LdxHQQN_BrTieYRct48y2pua1oyEqtSG5tzzFo",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://cloud-backup.onrender.com/api/v1/storage/mark-unsafe/10",
+									"protocol": "https",
+									"host": [
+										"cloud-backup",
+										"onrender",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"storage",
+										"mark-unsafe",
+										"10"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create folder to hold files",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksInJvbGUiOiJhZG1pbiIsImZ1bGxOYW1lIjoiU3VwZXIgYWRtaW4gMiIsImlhdCI6MTY5MzE3MTYxOCwiZXhwIjoxNjkzMTc1MjE4fQ.__TchYy1vBF69sk7Ye9-lbp8VWBRYC2NMeyo7ExRQjE",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"folderName\": \"archives\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://cloud-backup.onrender.com/api/v1/storage/create-folder",
+									"protocol": "https",
+									"host": [
+										"cloud-backup",
+										"onrender",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"storage",
+										"create-folder"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "File history",
+					"item": [
+						{
+							"name": "Fetch file history",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksInJvbGUiOiJhZG1pbiIsImZ1bGxOYW1lIjoiU3VwZXIgYWRtaW4gMiIsImlhdCI6MTY5MzE3MTYxOCwiZXhwIjoxNjkzMTc1MjE4fQ.__TchYy1vBF69sk7Ye9-lbp8VWBRYC2NMeyo7ExRQjE",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://cloud-backup.onrender.com/api/v1/history",
+									"protocol": "https",
+									"host": [
+										"cloud-backup",
+										"onrender",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"history"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Fetch history for a given user",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksInJvbGUiOiJhZG1pbiIsImZ1bGxOYW1lIjoiU3VwZXIgYWRtaW4gMiIsImlhdCI6MTY5MzE3MTYxOCwiZXhwIjoxNjkzMTc1MjE4fQ.__TchYy1vBF69sk7Ye9-lbp8VWBRYC2NMeyo7ExRQjE",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://cloud-backup.onrender.com/api/v1/history/2",
+									"protocol": "https",
+									"host": [
+										"cloud-backup",
+										"onrender",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"history",
+										"2"
 									]
 								}
 							},
