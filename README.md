@@ -2,7 +2,7 @@
 
 # Cloud Backup Service API
 
-The Cloud Backup API is a backend service that powers a cloud backup system. It allows users to securely create accounts and manage their backups in the cloud. This API is built using Google Cloud, ExpressJS, NodeJS, PostgreSQL, TypeScript and Jest for testing.
+The Cloud Backup API is a backend service that powers a cloud backup system. It allows users to securely create accounts and manage their backups in the cloud. This API is built using Google Cloud, Redis, ExpressJS, NodeJS, PostgreSQL, TypeScript and Jest for testing.
 
 ## Features
 
@@ -89,6 +89,11 @@ DB_USERNAME=
 DB_PASSWORD=
 DB_NAME=cloud_backup
 
+# redis configuration
+REDIS_HOST=
+REDIS_PASSWORD=
+REDIS_PORT=
+
 # application secrets
 JWT_SECRET_USER=
 JWT_SECRET_ADMIN=
@@ -99,7 +104,9 @@ ADMIN_TOKEN=
 
 6. Create a Google Cloud Storage bucket and download the JSON credentials file. Save it as `storage-keys.json` in the project root directory.
 
-7. Start the server:
+7. Create a Redis instance and set the environment variables in the `.env` file.
+
+8. Start the server:
 
 ```bash
 yarn start:dev

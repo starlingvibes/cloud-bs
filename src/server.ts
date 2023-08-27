@@ -2,18 +2,9 @@ import express, { Express, Request, Response } from 'express';
 import authRouter from './routes/auth.route';
 import storageRouter from './routes/storage.route';
 import historyRouter from './routes/history.route';
-import { createClient } from 'redis';
+// import { createClient } from 'redis';
 const dotenv = require('dotenv');
 const cors = require('cors');
-
-const client = createClient();
-const connectRedis = async () => {
-  await client.connect();
-};
-connectRedis();
-
-client.on('connect', () => console.log('Redis Client Connected'));
-client.on('error', (error) => console.log('Redis Client Error: ', error));
 
 dotenv.config();
 

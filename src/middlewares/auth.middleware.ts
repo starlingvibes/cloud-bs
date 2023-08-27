@@ -1,13 +1,41 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
+import { createClient } from 'redis';
 
 const userSecret = process.env.JWT_SECRET_USER;
-const orgSecret = process.env.JWT_SECRET_ADMIN;
+const adminSecret = process.env.JWT_SECRET_ADMIN;
 
-const verifyUser = (req, res, next) => {
+// TODO: refactor the redis functions here to use a service
+const verifyUser = async (req, res, next) => {
   try {
     const token = req.headers.authorization;
+
+    const connectRedisAndCheckToken = async () => {
+      const client = createClient({
+        password: process.env.REDIS_PASSWORD,
+        socket: {
+          host: process.env.REDIS_HOST,
+          port: parseInt(process.env.REDIS_PORT),
+        },
+      });
+
+      await client.connect();
+
+      await client.on('connect', () => console.log('Redis Client Connected'));
+      await client.on('error', (error) =>
+        console.log('Redis Client Error: ', error)
+      );
+
+      if (
+        (await client.hGet(`user:${decoded.userId}`, 'isActive')) === 'false'
+      ) {
+        throw new Error("User's session has been revoked");
+      }
+    };
+
+    await connectRedisAndCheckToken();
     const decoded = jwt.verify(token, userSecret);
+
     req.userData = decoded;
     next();
   } catch (error) {
@@ -18,7 +46,7 @@ const verifyUser = (req, res, next) => {
 const verifyAdmin = (req, res, next) => {
   try {
     const token = req.headers.authorization;
-    const decoded = jwt.verify(token, orgSecret);
+    const decoded = jwt.verify(token, adminSecret);
     req.userData = decoded;
     next();
   } catch (error) {
@@ -26,16 +54,40 @@ const verifyAdmin = (req, res, next) => {
   }
 };
 
-const verifyBoth = (req, res, next) => {
+const verifyBoth = async (req, res, next) => {
   try {
     const token = req.headers.authorization;
-    const decoded = jwt.verify(token, orgSecret);
+    const decoded = jwt.verify(token, adminSecret);
     req.userData = decoded;
     next();
   } catch (error) {
     try {
       const token = req.headers.authorization;
       const decoded = jwt.verify(token, userSecret);
+      const connectRedisAndCheckToken = async () => {
+        const client = createClient({
+          password: process.env.REDIS_PASSWORD,
+          socket: {
+            host: process.env.REDIS_HOST,
+            port: parseInt(process.env.REDIS_PORT),
+          },
+        });
+
+        await client.connect();
+
+        await client.on('connect', () => console.log('Redis Client Connected'));
+        await client.on('error', (error) =>
+          console.log('Redis Client Error: ', error)
+        );
+
+        if (
+          (await client.hGet(`user:${decoded.userId}`, 'isActive')) === 'false'
+        ) {
+          throw new Error("User's session has been revoked");
+        }
+      };
+
+      await connectRedisAndCheckToken();
       req.userData = decoded;
       next();
     } catch (error) {

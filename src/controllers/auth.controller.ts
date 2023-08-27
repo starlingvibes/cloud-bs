@@ -2,6 +2,8 @@ import express, { Request, Response } from 'express';
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 import { UserService } from '../services/user.service';
+import { createClient } from 'redis';
+const dotenv = require('dotenv');
 
 const router = express.Router();
 const userService = new UserService();
@@ -67,6 +69,31 @@ const login = async (req: Request, res: Response) => {
       }
     );
 
+    // TODO: Refactor this into a separate function
+    const connectRedisAndCreateEntry = async () => {
+      const client = createClient({
+        password: process.env.REDIS_PASSWORD,
+        socket: {
+          host: process.env.REDIS_HOST,
+          port: parseInt(process.env.REDIS_PORT),
+        },
+      });
+
+      await client.connect();
+
+      await client.on('connect', () => console.log('Redis Client Connected'));
+      await client.on('error', (error) =>
+        console.log('Redis Client Error: ', error)
+      );
+
+      await client.hSet(`user:${user.id}`, 'token', token);
+      await client.hSet(`user:${user.id}`, 'isActive', 'true');
+
+      console.log(await client.hGetAll(`user:${user.id}`));
+    };
+
+    connectRedisAndCreateEntry();
+
     return res.status(200).json({
       status: 'success',
       message: 'User logged in successfully',
@@ -84,4 +111,43 @@ const login = async (req: Request, res: Response) => {
   }
 };
 
-export { register, login };
+const revokeUserSession = async (req: Request, res: Response) => {
+  const userId = parseInt(req.params.userId, 10);
+  try {
+    const connectRedisAndRevokeToken = async () => {
+      const client = createClient({
+        password: process.env.REDIS_PASSWORD,
+        socket: {
+          host: process.env.REDIS_HOST,
+          port: parseInt(process.env.REDIS_PORT),
+        },
+      });
+
+      await client.connect();
+
+      await client.on('connect', () => console.log('Redis Client Connected'));
+      await client.on('error', (error) =>
+        console.log('Redis Client Error: ', error)
+      );
+
+      await client.hSet(`user:${userId}`, 'isActive', 'false');
+
+      console.log(await client.hGetAll(`user:${userId}`));
+    };
+    connectRedisAndRevokeToken();
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'User session revoked successfully',
+      data: null,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: 'error',
+      message: 'An error occurred whilst revoking user session',
+      data: null,
+    });
+  }
+};
+
+export { register, login, revokeUserSession };
