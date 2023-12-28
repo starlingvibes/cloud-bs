@@ -7,9 +7,10 @@ services:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_DB: ${DB_NAME}
   app:
-    image: cloud-bs
+    build: ./
+    container_name: backend_api
     ports:
-      - '13000:8000'
+      - '8080:8080'
     depends_on:
       - db
       - redis

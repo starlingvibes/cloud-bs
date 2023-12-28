@@ -1,12 +1,15 @@
-FROM node:16
+FROM node:21.5.0
 
 WORKDIR /app
 
-COPY package.json ./app
+COPY package*.json ./
 
 RUN npm install
 
-COPY ./src ./app
+COPY . .
 
-EXPOSE 8000
-CMD ["npm", "run", "start:dev"]
+RUN npm run build
+
+EXPOSE 8080
+
+CMD ["npm", "run", "start:prod"]
